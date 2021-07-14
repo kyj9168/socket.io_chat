@@ -3,7 +3,6 @@ $(function () {
     const TYPING_TIMER_LENGTH = 400; // ms
     const COLORS = [
         "#a26360",
-        "#5f5e58",
         "#d8dfcb",
         "#6d7d7b",
         "#d4a29c",
