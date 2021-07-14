@@ -93,7 +93,11 @@ $(function () {
         const $messageDiv = $('<li class="message right"/>')
             .data("username", data.username)
             .addClass(typingClass)
-            .append($usernameDiv, $messageBodyDiv,`<p class="time right">${date()}</p>`);
+            .append(
+                $usernameDiv,
+                $messageBodyDiv,
+                `<p class="time right">${date()}</p>`
+            );
 
         addMessageElement($messageDiv, options);
     };
@@ -118,7 +122,11 @@ $(function () {
         const $messageDiv = $('<li class="message left"/>')
             .data("username", data.username)
             .addClass(typingClass)
-            .append($usernameDiv, $messageBodyDiv,`<p class="time left">${date()}</p>`);
+            .append(
+                $usernameDiv,
+                $messageBodyDiv,
+                `<p class="time left">${date()}</p>`
+            );
 
         addMessageElement($messageDiv, options);
     };
@@ -126,7 +134,7 @@ $(function () {
     // Adds the visual chat typing message
     const addChatTyping = (data) => {
         data.typing = true;
-        data.message = "타이핑중...";
+        data.message = "● ● ●";
         addChatMessageLeft(data);
     };
 
@@ -164,6 +172,13 @@ $(function () {
         } else {
             $messages.append($el);
         }
+
+        // $messages.stop().animate(
+        //     {
+        //         scrollTop: $messages[0].scrollHeight,
+        //     },
+        //     100
+        // );
 
         $messages[0].scrollTop = $messages[0].scrollHeight;
     };
