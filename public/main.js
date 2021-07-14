@@ -28,9 +28,9 @@ $(function() {
   const addParticipantsMessage = (data) => {
     let message = '';
     if (data.numUsers === 1) {
-      message += `there's 1 participant`;
+      message += `1명 접속중`;
     } else {
-      message += `there are ${data.numUsers} participants`;
+      message += `${data.numUsers}명 접속중`;
     }
     log(message);
   }
@@ -98,7 +98,7 @@ $(function() {
   // Adds the visual chat typing message
   const addChatTyping = (data) => {
     data.typing = true;
-    data.message = 'is typing';
+    data.message = '님 타이핑중...';
     addChatMessage(data);
   }
 
@@ -225,7 +225,7 @@ $(function() {
   socket.on('login', (data) => {
     connected = true;
     // Display the welcome message
-    const message = 'Welcome to Socket.IO Chat – ';
+    const message = '이슈 토론방에 오신걸 환영합니다.';
     log(message, {
       prepend: true
     });
@@ -239,13 +239,13 @@ $(function() {
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', (data) => {
-    log(`${data.username} joined`);
+    log(`${data.username}님 입장`);
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', (data) => {
-    log(`${data.username} left`);
+    log(`${data.username}님이 떠났습니다.`);
     addParticipantsMessage(data);
     removeChatTyping(data);
   });
@@ -261,18 +261,18 @@ $(function() {
   });
 
   socket.on('disconnect', () => {
-    log('you have been disconnected');
+    log('연결이 끊겼습니다.');
   });
 
   socket.on('reconnect', () => {
-    log('you have been reconnected');
+    log('다시 연결되었습니다.');
     if (username) {
       socket.emit('add user', username);
     }
   });
 
   socket.on('reconnect_error', () => {
-    log('attempt to reconnect has failed');
+    log('재연결이 실패하였습니다.');
   });
 
 });
