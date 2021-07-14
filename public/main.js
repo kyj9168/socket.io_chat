@@ -62,7 +62,6 @@ $(function () {
         // if there is a non-empty message and a socket connection
         if (message && connected) {
             $inputMessage.val("");
-            console.log("나임", username, message);
             addChatMessageRight({ username, message });
             // tell server to execute 'new message' and send along one parameter
             socket.emit("new message", message);
@@ -94,7 +93,7 @@ $(function () {
         const $messageDiv = $('<li class="message right"/>')
             .data("username", data.username)
             .addClass(typingClass)
-            .append($usernameDiv, $messageBodyDiv);
+            .append($usernameDiv, $messageBodyDiv,`<p class="time right">${date()}</p>`);
 
         addMessageElement($messageDiv, options);
     };
@@ -119,7 +118,7 @@ $(function () {
         const $messageDiv = $('<li class="message left"/>')
             .data("username", data.username)
             .addClass(typingClass)
-            .append($usernameDiv, $messageBodyDiv);
+            .append($usernameDiv, $messageBodyDiv,`<p class="time left">${date()}</p>`);
 
         addMessageElement($messageDiv, options);
     };
@@ -194,6 +193,14 @@ $(function () {
         }
     };
 
+    const date = () => {
+        var now = new Date();
+
+        var hr = now.getHours(); //시간
+        var min = now.getMinutes(); //분
+        return `${hr}:${min}`;
+    };
+
     // Gets the 'X is typing' messages of a user
     const getTypingMessages = (data) => {
         return $(".typing.message").filter(function (i) {
@@ -263,7 +270,6 @@ $(function () {
 
     // Whenever the server emits 'new message', update the chat body
     socket.on("new message", (data) => {
-        console.log("나 아님", data);
         addChatMessageLeft(data);
     });
 
