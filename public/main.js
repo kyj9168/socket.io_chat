@@ -1,13 +1,7 @@
 $(function () {
     const FADE_TIME = 150; // ms
     const TYPING_TIMER_LENGTH = 400; // ms
-    const COLORS = [
-        "#a26360",
-        "#d8dfcb",
-        "#6d7d7b",
-        "#d4a29c",
-        "#edcc8b",
-    ];
+    const COLORS = ["#a26360", "#d8dfcb", "#6d7d7b", "#d4a29c", "#edcc8b"];
 
     // Initialize variables
     const $window = $(window);
@@ -208,11 +202,7 @@ $(function () {
     };
 
     const date = () => {
-        var now = new Date();
-
-        var hr = now.getHours(); //시간
-        var min = now.getMinutes(); //분
-        return `${hr}:${min}`;
+        return moment().format("a hh:mm");
     };
 
     // Gets the 'X is typing' messages of a user
