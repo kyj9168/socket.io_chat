@@ -7,10 +7,11 @@
   "private": true,
   "license": "BSD",
   "dependencies": {
+    "elasticsearch": "^16.7.2",
     "express": "~4.17.1",
     "socket.io": "^4.0.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   }
 }
