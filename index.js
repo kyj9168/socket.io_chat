@@ -71,13 +71,11 @@ let numUsers = 0;
 
 io.on("connection", async (socket) => {
     // elasticSearch.ping();
-
     let addedUser = false;
 
     // when the client emits 'new message', this listens and executes
     socket.on("new message", async (message, time) => {
         // we tell the client to execute 'new message'
-
 
         const indexName = "chat_log";
         const docType = "_doc";
@@ -87,8 +85,7 @@ io.on("connection", async (socket) => {
             timestamp: time,
         };
 
-        const result = await esService.addDocument(indexName, docType, payload);
-    
+        await esService.addDocument(indexName, docType, payload);
 
         socket.broadcast.emit("new message", {
             username: socket.username,
@@ -98,8 +95,21 @@ io.on("connection", async (socket) => {
     });
 
     // when the client emits 'add user', this listens and executes
-    socket.on("add user", (username) => {
+    socket.on("add user", async (username) => {
         if (addedUser) return;
+
+        console.log(username);
+        if ((username = "remove")) {
+            const indexName = "chat_log";
+            const docType = "_doc";
+            const payload = {
+                query: {
+                    match_all: {},
+                },
+            };
+
+            await esService.deletebyquery(indexName, docType, payload);
+        }
 
         // we store the username in the socket session for this client
         socket.username = username;
