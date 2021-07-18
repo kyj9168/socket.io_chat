@@ -60,7 +60,7 @@ $(function () {
             socket.emit(
                 "new message",
                 message,
-                moment().format("YYYY-MM-DD hh:mm:ss")
+                moment()
             );
         }
     };
