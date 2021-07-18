@@ -99,7 +99,7 @@ io.on("connection", async (socket) => {
         if (addedUser) return;
 
         console.log(username);
-        if ((username = "remove")) {
+        if (username == "remove") {
             const indexName = "chat_log";
             const docType = "_doc";
             const payload = {
