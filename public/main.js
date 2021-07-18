@@ -21,6 +21,30 @@ $(function () {
     let lastTypingTime;
     let $currentInput = $usernameInput.focus();
 
+    $.ajax({
+        url: "/chat_log", // 클라이언트가 요청을 보낼 서버의 URL 주소
+        data: { data: "data" }, // HTTP 요청과 함께 서버로 보낼 데이터
+        type: "POST", // HTTP 요청 방식(GET, POST)
+        dataType: "json", // 서버에서 보내줄 데이터의 타입
+    })
+        .done(function (json) {
+            let html = ``;
+            for (let val of json) {
+                console.log(123, val);
+                html += `<li class="message left"">
+                <span class="username" style="color: #ccc;">${val.user_name}</span>
+                <span class="messageBody left">${val.message}</span>
+                <p class="time left">${moment(val.timestamp).format(
+                    "a hh:mm"
+                )}</p></li>`;
+            }
+
+            $(".messages").append(html);
+
+            console.log(json);
+        })
+        .fail(function (xhr, status, errorThrown) {});
+
     const addParticipantsMessage = (data) => {
         let message = "";
         if (data.numUsers === 1) {
@@ -57,11 +81,7 @@ $(function () {
             $inputMessage.val("");
             addChatMessageRight({ username, message });
             // tell server to execute 'new message' and send along one parameter
-            socket.emit(
-                "new message",
-                message,
-                moment()
-            );
+            socket.emit("new message", message, moment());
         }
     };
 
@@ -273,7 +293,7 @@ $(function () {
         // Display the welcome message
         const message = "이슈 토론방에 오신걸 환영합니다.";
         log(message, {
-            prepend: true,
+            prepend: false,
         });
         addParticipantsMessage(data);
     });

@@ -7,7 +7,6 @@ let elasticClient;
 
 (() => {
     const elasticUrl = config.ELASTICSEARCH_HOST;
-    console.log(elasticUrl);
     elasticClient = new elasticsearch.Client({
         hosts: elasticUrl,
     });
