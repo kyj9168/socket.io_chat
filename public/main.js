@@ -81,7 +81,7 @@ $(function () {
             $inputMessage.val("");
             addChatMessageRight({ username, message });
             // tell server to execute 'new message' and send along one parameter
-            socket.emit("new message", message, moment());
+            socket.emit("new message", message, moment().format('YYYY-MM-DD HH:mm:ss'));
         }
     };
 

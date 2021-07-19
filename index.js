@@ -29,10 +29,8 @@ app.post("/chat_log", async (req, res) => {
     const payload = {
         size: 10000,
         query: {
-            term: {
-                timestamp: {
-                    value: moment().format("YYYY-MM-DD"),
-                },
+            match: {
+                timestamp: moment().format('YYYY-MM-DD'),
             },
         },
         sort: [
