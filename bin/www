@@ -1,72 +1,43 @@
-// Setup basic express server
-const express = require("express");
-const app = express();
-const path = require("path");
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
-const moment = require("moment");
+#!/usr/bin/env node
 
-const configfile = require("./.config/config.json");
+/**
+ * Module dependencies.
+ */
+
+var app = require("../app");
+var debug = require("debug")("sampleapp:server");
+var http = require("http");
+
+const approot = require("app-root-path");
+const configfile = require("../.config/config.json");
 const runmode = configfile.runmode;
 const config = configfile[runmode];
-
-const esService = require("./utils/elasticsearch.service");
+const esService = require(`${approot}/utils/elasticsearch.service`);
+/**
+ * Get port from environment and store in Express.
+ */
 
 const port = process.env.PORT || config.EXPRESS_PORT;
+app.set("port", port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
 
 server.listen(port, () => {
     console.log("Server listening at port %d", port);
 });
+server.on("error", onError);
+server.on("listening", onListening);
 
-// Routing
-app.use(express.static(path.join(__dirname, "public")));
-
-//moment().format("MM-DD-YYYY");
-
-app.post("/chat_log", async (req, res) => {
-    const indexName = "chat_log";
-    const docType = "_doc";
-    const payload = {
-        size: 10000,
-        query: {
-            match: {
-                timestamp: moment().format('YYYY-MM-DD'),
-            },
-        },
-        sort: [
-            {
-                timestamp: {
-                    order: "asc",
-                },
-            },
-        ],
-    };
-    const scrollTime = "1m";
-    const total = [];
-    const result = await esService.scrollSearch(
-        indexName,
-        docType,
-        payload,
-        scrollTime
-    );
-
-    for (let i = 0; i < result.hits.hits.length; i++) {
-        total.push(result.hits.hits[i]._source);
-    }
-    if (total.length < result.hits.total) {
-        const scrollResult = await esService.scroll(
-            scrollTime,
-            result._scroll_id
-        );
-        for (let i = 0; i < scrollResult.hits.hits.length; i++) {
-            total.push(scrollResult.hits.hits[i]._source);
-        }
-    }
-
-    res.send(total);
-});
+const io = require("socket.io")(server);
 let numUsers = 0;
-
 io.on("connection", async (socket) => {
     // elasticSearch.ping();
     let addedUser = false;
@@ -83,13 +54,13 @@ io.on("connection", async (socket) => {
             timestamp: time,
         };
 
-        await esService.addDocument(indexName, docType, payload);
-
         socket.broadcast.emit("new message", {
             username: socket.username,
             message: message,
             time: time,
         });
+        
+        await esService.addDocument(indexName, docType, payload);
     });
 
     // when the client emits 'add user', this listens and executes
@@ -150,3 +121,59 @@ io.on("connection", async (socket) => {
         }
     });
 });
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== "listen") {
+        throw error;
+    }
+
+    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case "EACCES":
+            console.error(bind + " requires elevated privileges");
+            process.exit(1);
+            break;
+        case "EADDRINUSE":
+            console.error(bind + " is already in use");
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    debug("Listening on " + bind);
+}
