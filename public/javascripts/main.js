@@ -30,9 +30,10 @@ $(function () {
         .done(function (json) {
             let html = ``;
             for (let val of json) {
-                console.log(123, val);
                 html += `<li class="message left"">
-                <span class="username" style="color: #ccc;">${val.user_name}</span>
+                <span class="username" style="color: #ccc;">${
+                    val.user_name
+                }</span>
                 <span class="messageBody left">${val.message}</span>
                 <p class="time left">${moment(val.timestamp).format(
                     "a hh:mm"
@@ -81,7 +82,11 @@ $(function () {
             $inputMessage.val("");
             addChatMessageRight({ username, message });
             // tell server to execute 'new message' and send along one parameter
-            socket.emit("new message", message, moment().format('YYYY-MM-DD HH:mm:ss'));
+            socket.emit(
+                "new message",
+                message,
+                moment().format("YYYY-MM-DD HH:mm:ss")
+            );
         }
     };
 
@@ -131,7 +136,7 @@ $(function () {
         const $usernameDiv = $('<span class="username"/>')
             .text(data.username)
             .css("color", getUsernameColor(data.username));
-        const $messageBodyDiv = $('<span class="messageBody left">').text(
+        const $messageBodyDiv = $('<span class="messageBody left">').html(
             data.message
         );
 
@@ -153,7 +158,11 @@ $(function () {
     // Adds the visual chat typing message
     const addChatTyping = (data) => {
         data.typing = true;
-        data.message = "● ● ●";
+        data.message = `<div class="loader">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>`;
         addChatMessageLeft(data);
     };
 

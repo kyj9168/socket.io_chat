@@ -59,7 +59,7 @@ io.on("connection", async (socket) => {
             message: message,
             time: time,
         });
-        
+
         await esService.addDocument(indexName, docType, payload);
     });
 
@@ -67,7 +67,7 @@ io.on("connection", async (socket) => {
     socket.on("add user", async (username) => {
         if (addedUser) return;
 
-        console.log(username);
+        console.log("username : " + username);
         if (username == "remove") {
             const indexName = "chat_log";
             const docType = "_doc";
