@@ -7,7 +7,11 @@ const esService = require(`${approot}/utils/elasticsearch.service`);
 
 router.post("/chat_log", apiController.chat_log);
 
+// router.post("/pop_keywrod", function (req, res, next) {
+//     res.render("index", { keyword: ["test1", "test2", "test3"] });
+// });
+
 router.all("/", function (req, res, next) {
-    res.render("index");
+    res.render("index", { keyword: ["삼성", "전자","뱅크", "주식"] });
 });
 module.exports = router;

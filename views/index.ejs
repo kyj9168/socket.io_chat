@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>issue chat</title>
-        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel="stylesheet" href="/stylesheets/style.css" />
         <link rel="shortcut icon" href="favicon.ico" />
     </head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
@@ -13,6 +13,13 @@
             <li class="chat page">
                 <div class="chatArea">
                     <ul class="messages"></ul>
+
+                    <div class="pop_keyword_div">
+                        주요 키워드 <br>
+                        <% for(var i = 0; i < keyword.length; i++){%> 
+                        <%=i+1%> : <%=keyword[i] %> <br>
+                        <% } %>
+                    </div>
                 </div>
                 <input class="inputMessage" placeholder="채팅을 하세요~" />
             </li>
