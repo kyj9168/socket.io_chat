@@ -47,13 +47,13 @@ io.on('connection', async (socket) => {
     socket.on('new message', async (message, time) => {
         // we tell the client to execute 'new message'
 
-        const indexName = 'chat_log';
-        const docType = '_doc';
-        const payload = {
-            user_name: socket.username,
-            message: message,
-            timestamp: time,
-        };
+        // const indexName = 'chat_log';
+        // const docType = '_doc';
+        // const payload = {
+        //     user_name: socket.username,
+        //     message: message,
+        //     timestamp: time,
+        // };
 
         socket.broadcast.emit('new message', {
             username: socket.username,
@@ -71,7 +71,7 @@ io.on('connection', async (socket) => {
                     messages: JSON.stringify({
                         username: socket.username,
                         message: message,
-                        time: time,
+                        timestamp: time,
                     }),
                 },
             ]);
