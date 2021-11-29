@@ -4,21 +4,22 @@
  * Module dependencies.
  */
 
-var app = require("../app");
-var debug = require("debug")("sampleapp:server");
-var http = require("http");
+var app = require('../app');
+var debug = require('debug')('sampleapp:server');
+var http = require('http');
 
-const approot = require("app-root-path");
-const configfile = require("../.config/config.json");
+const approot = require('app-root-path');
+const configfile = require('../.config/config.json');
 const runmode = configfile.runmode;
 const config = configfile[runmode];
 const esService = require(`${approot}/utils/elasticsearch.service`);
+const kafka = require('kafka-node');
+const port = config.EXPRESS_PORT;
 /**
  * Get port from environment and store in Express.
  */
 
-const port = process.env.PORT || config.EXPRESS_PORT;
-app.set("port", port);
+app.set('port', port);
 
 /**
  * Create HTTP server.
@@ -31,46 +32,68 @@ var server = http.createServer(app);
  */
 
 server.listen(port, () => {
-    console.log("Server listening at port %d", port);
+    console.log('Server listening at port %d', port);
 });
-server.on("error", onError);
-server.on("listening", onListening);
+server.on('error', onError);
+server.on('listening', onListening);
 
-const io = require("socket.io")(server);
+const io = require('socket.io')(server);
 let numUsers = 0;
-io.on("connection", async (socket) => {
+io.on('connection', async (socket) => {
     // elasticSearch.ping();
     let addedUser = false;
 
     // when the client emits 'new message', this listens and executes
-    socket.on("new message", async (message, time) => {
+    socket.on('new message', async (message, time) => {
         // we tell the client to execute 'new message'
 
-        const indexName = "chat_log";
-        const docType = "_doc";
+        const indexName = 'chat_log';
+        const docType = '_doc';
         const payload = {
             user_name: socket.username,
             message: message,
             timestamp: time,
         };
 
-        socket.broadcast.emit("new message", {
+        socket.broadcast.emit('new message', {
             username: socket.username,
             message: message,
             time: time,
         });
 
+            Producer = kafka.Producer,
+            KeyedMessage = kafka.KeyedMessage,
+            client = new kafka.KafkaClient(),
+            producer = new Producer(client),
+            km = new KeyedMessage('key', 'message'),
+            payloads = 
+                { topic: 'topic1', messages: {
+                    username: socket.username,
+                    message: message,
+                    time: time,
+                } }
+            ;
+        producer.on('ready', function () {
+            producer.send({
+                username: socket.username,
+                message: message,
+                time: time,
+            }, function (err, data) {
+                console.log(data);
+            });
+        });
+        console.log(payload);
         await esService.addDocument(indexName, docType, payload);
     });
 
     // when the client emits 'add user', this listens and executes
-    socket.on("add user", async (username) => {
+    socket.on('add user', async (username) => {
         if (addedUser) return;
 
-        console.log("username : " + username);
-        if (username == "remove") {
-            const indexName = "chat_log";
-            const docType = "_doc";
+        console.log('username : ' + username);
+        if (username == 'remove') {
+            const indexName = 'chat_log';
+            const docType = '_doc';
             const payload = {
                 query: {
                     match_all: {},
@@ -84,37 +107,37 @@ io.on("connection", async (socket) => {
         socket.username = username;
         ++numUsers;
         addedUser = true;
-        socket.emit("login", {
+        socket.emit('login', {
             numUsers: numUsers,
         });
         // echo globally (all clients) that a person has connected
-        socket.broadcast.emit("user joined", {
+        socket.broadcast.emit('user joined', {
             username: socket.username,
             numUsers: numUsers,
         });
     });
 
     // when the client emits 'typing', we broadcast it to others
-    socket.on("typing", () => {
-        socket.broadcast.emit("typing", {
+    socket.on('typing', () => {
+        socket.broadcast.emit('typing', {
             username: socket.username,
         });
     });
 
     // when the client emits 'stop typing', we broadcast it to others
-    socket.on("stop typing", () => {
-        socket.broadcast.emit("stop typing", {
+    socket.on('stop typing', () => {
+        socket.broadcast.emit('stop typing', {
             username: socket.username,
         });
     });
 
     // when the user disconnects.. perform this
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
         if (addedUser) {
             --numUsers;
 
             // echo globally that this client has left
-            socket.broadcast.emit("user left", {
+            socket.broadcast.emit('user left', {
                 username: socket.username,
                 numUsers: numUsers,
             });
@@ -147,20 +170,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-    if (error.syscall !== "listen") {
+    if (error.syscall !== 'listen') {
         throw error;
     }
 
-    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+    var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
-        case "EACCES":
-            console.error(bind + " requires elevated privileges");
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
             process.exit(1);
             break;
-        case "EADDRINUSE":
-            console.error(bind + " is already in use");
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
             process.exit(1);
             break;
         default:
@@ -174,6 +197,6 @@ function onError(error) {
 
 function onListening() {
     var addr = server.address();
-    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-    debug("Listening on " + bind);
+    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    debug('Listening on ' + bind);
 }
