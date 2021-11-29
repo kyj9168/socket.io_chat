@@ -67,7 +67,7 @@ io.on('connection', async (socket) => {
             producer = new Producer(client),
             km = new KeyedMessage('key', 'message'),
             payloads = 
-                { topic: 'topic1', messages: {
+                { topic: 'chat_log', messages: {
                     username: socket.username,
                     message: message,
                     time: time,
