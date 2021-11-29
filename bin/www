@@ -81,7 +81,7 @@ io.on('connection', async (socket) => {
             });
         });
         console.log(payload);
-        await esService.addDocument(indexName, docType, payload);
+        // await esService.addDocument(indexName, docType, payload);
     });
 
     // when the client emits 'add user', this listens and executes
