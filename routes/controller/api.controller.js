@@ -14,7 +14,7 @@ const chat_log = async (req, res, next) => {
         size: 10000,
         query: {
             match: {
-                time: moment().format("YYYY-MM-DD"),
+                timestamp: moment().format("YYYY-MM-DD"),
             },
         },
         sort: [

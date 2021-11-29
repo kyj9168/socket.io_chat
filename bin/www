@@ -69,7 +69,7 @@ io.on('connection', async (socket) => {
                 {
                     topic: 'chat_log',
                     messages: JSON.stringify({
-                        username: socket.username,
+                        user_name: socket.username,
                         message: message,
                         timestamp: time,
                     }),
