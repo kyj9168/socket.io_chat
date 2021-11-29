@@ -65,20 +65,14 @@ io.on('connection', async (socket) => {
             KeyedMessage = kafka.KeyedMessage,
             client = new kafka.KafkaClient(),
             producer = new Producer(client),
-            km = new KeyedMessage('key', 'message'),
-            payloads = 
-                { topic: 'chat_log', messages: {
+            payloads = { topic: 'chat_log', messages: {
                     username: socket.username,
                     message: message,
                     time: time,
                 } }
             ;
         producer.on('ready', function () {
-            producer.send({
-                username: socket.username,
-                message: message,
-                time: time,
-            }, function (err, data) {
+            producer.send(payloads, function (err, data) {
                 console.log(data);
             });
         });
