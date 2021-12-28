@@ -49,11 +49,11 @@ io.on('connection', async (socket) => {
 
         // const indexName = 'chat_log';
         // const docType = '_doc';
-        // const payload = {
-        //     user_name: socket.username,
-        //     message: message,
-        //     timestamp: time,
-        // };
+        const payload = {
+            user_name: socket.username,
+            message: message,
+            timestamp: time,
+        };
 
         socket.broadcast.emit('new message', {
             username: socket.username,
@@ -80,7 +80,7 @@ io.on('connection', async (socket) => {
                 console.log(data);
             });
         });
-        // console.log(payload);
+        console.log(payload);
         // await esService.addDocument(indexName, docType, payload);
     });
 
