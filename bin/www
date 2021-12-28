@@ -80,7 +80,7 @@ io.on('connection', async (socket) => {
                 console.log(data);
             });
         });
-        console.log(payload);
+        // console.log(payload);
         // await esService.addDocument(indexName, docType, payload);
     });
 
