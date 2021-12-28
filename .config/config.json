@@ -2,7 +2,7 @@
     "runmode": "local",
     "local": {
         "DEBUG_LEVEL": "debug",
-        "ELASTICSEARCH_HOST": "ßelastic:rladud1158@kyj9168.ddns.net:6500",
+        "ELASTICSEARCH_HOST": "elastic:rladud1158@kyj9168.ddns.net:6500",
         "EXPRESS_PORT": 6101
     }
 }
