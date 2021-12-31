@@ -38,7 +38,7 @@ $(function () {
 
             $('.messages').append(html);
 
-            console.log(json);
+            // console.log(json);
         })
         .fail(function (xhr, status, errorThrown) {});
 
@@ -278,6 +278,7 @@ $(function () {
 
     // Whenever the server emits 'login', log the login message
     socket.on('login', (data) => {
+        socket.emit('set_keyword');
         connected = true;
         // Display the welcome message
         const message = '이슈 토론방에 오신걸 환영합니다.';
@@ -312,7 +313,12 @@ $(function () {
     });
     socket.on('keyword', (data) => {
         let buckets = data.result.aggregations.myagg.buckets;
-        let resultArr = '';
+        let resultArr =
+            '<b>' +
+            moment().add(-1, 'hours').format('HH:mm:ss') +
+            '</b>에서 <b>' +
+            moment().format(' HH:mm:ss') +
+            '</b>까지의 주요 키워드<br><br>';
         let num = 1;
         for (let i in buckets) {
             var pattern = /([^가-힣a-z\x20])/i;
@@ -320,7 +326,7 @@ $(function () {
 
             // if (buckets[i].messageAggs.buckets[0].key == 'true') {
             if (!pattern.test(buckets[i].key) && buckets[i].key.length > 1) {
-                resultArr += buckets[i].key + ':' + buckets[i].doc_count + '<br>';
+                resultArr += '<b>' + buckets[i].key + ':</b>' + buckets[i].doc_count + '개<br>';
                 if (num == 10) {
                     break;
                 }
