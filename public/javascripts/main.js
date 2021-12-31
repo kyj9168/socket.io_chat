@@ -310,9 +310,13 @@ $(function () {
     socket.on('keyword', (data) => {
         let buckets = data.result.aggregations.myagg.buckets;
         let resultArr = '';
+        let num = 1;
         for (let i in buckets) {
-            if (buckets[i].messageAggs.buckets[0].key == 'true')
-                resultArr += Number(i) + 1 + '.' + buckets[i].key + ':' + buckets[i].doc_count + '<br>';
+            if (buckets[i].messageAggs.buckets[0].key == 'true') {
+                resultArr += num + '.' + buckets[i].key + ':' + buckets[i].doc_count + '<br>';
+                num++;
+            }
+
             if (i == 10) break;
         }
         // console.log(resultArr);
