@@ -1,16 +1,16 @@
 $(function () {
     const FADE_TIME = 150; // ms
     const TYPING_TIMER_LENGTH = 400; // ms
-    const COLORS = ["#a26360", "#d8dfcb", "#6d7d7b", "#d4a29c", "#edcc8b"];
+    const COLORS = ['#a26360', '#d8dfcb', '#6d7d7b', '#d4a29c', '#edcc8b'];
 
     // Initialize variables
     const $window = $(window);
-    const $usernameInput = $(".usernameInput"); // Input for username
-    const $messages = $(".messages"); // Messages area
-    const $inputMessage = $(".inputMessage"); // Input message input box
+    const $usernameInput = $('.usernameInput'); // Input for username
+    const $messages = $('.messages'); // Messages area
+    const $inputMessage = $('.inputMessage'); // Input message input box
 
-    const $loginPage = $(".login.page"); // The login page
-    const $chatPage = $(".chat.page"); // The chatroom page
+    const $loginPage = $('.login.page'); // The login page
+    const $chatPage = $('.chat.page'); // The chatroom page
 
     const socket = io();
 
@@ -22,32 +22,28 @@ $(function () {
     let $currentInput = $usernameInput.focus();
 
     $.ajax({
-        url: "/chat_log", // 클라이언트가 요청을 보낼 서버의 URL 주소
-        data: { data: "data" }, // HTTP 요청과 함께 서버로 보낼 데이터
-        type: "POST", // HTTP 요청 방식(GET, POST)
-        dataType: "json", // 서버에서 보내줄 데이터의 타입
+        url: '/chat_log', // 클라이언트가 요청을 보낼 서버의 URL 주소
+        data: { data: 'data' }, // HTTP 요청과 함께 서버로 보낼 데이터
+        type: 'POST', // HTTP 요청 방식(GET, POST)
+        dataType: 'json', // 서버에서 보내줄 데이터의 타입
     })
         .done(function (json) {
             let html = ``;
             for (let val of json) {
                 html += `<li class="message left"">
-                <span class="username" style="color: #ccc;">${
-                    val.user_name
-                }</span>
+                <span class="username" style="color: #ccc;">${val.user_name}</span>
                 <span class="messageBody left">${val.message}</span>
-                <p class="time left">${moment(val.timestamp).format(
-                    "a hh:mm"
-                )}</p></li>`;
+                <p class="time left">${moment(val.timestamp).format('a hh:mm')}</p></li>`;
             }
 
-            $(".messages").append(html);
+            $('.messages').append(html);
 
             console.log(json);
         })
         .fail(function (xhr, status, errorThrown) {});
 
     const addParticipantsMessage = (data) => {
-        let message = "";
+        let message = '';
         if (data.numUsers === 1) {
             message += `1명 접속중`;
         } else {
@@ -64,11 +60,11 @@ $(function () {
         if (username) {
             $loginPage.fadeOut();
             $chatPage.show();
-            $loginPage.off("click");
+            $loginPage.off('click');
             $currentInput = $inputMessage.focus();
 
             // Tell the server your username
-            socket.emit("add user", username);
+            socket.emit('add user', username);
         }
     };
 
@@ -79,20 +75,16 @@ $(function () {
         message = cleanInput(message);
         // if there is a non-empty message and a socket connection
         if (message && connected) {
-            $inputMessage.val("");
+            $inputMessage.val('');
             addChatMessageRight({ username, message });
             // tell server to execute 'new message' and send along one parameter
-            socket.emit(
-                "new message",
-                message,
-                moment().format("YYYY-MM-DD HH:mm:ss")
-            );
+            socket.emit('new message', message, moment().format('YYYY-MM-DD HH:mm:ss'));
         }
     };
 
     // Log a message
     const log = (message, options) => {
-        const $el = $("<li>").addClass("log").text(message);
+        const $el = $('<li>').addClass('log').text(message);
         addMessageElement($el, options);
     };
 
@@ -106,20 +98,14 @@ $(function () {
 
         const $usernameDiv = $('<span class="username"/>')
             .text(data.username)
-            .css("color", getUsernameColor(data.username));
-        const $messageBodyDiv = $('<span class="messageBody right">').text(
-            data.message
-        );
+            .css('color', getUsernameColor(data.username));
+        const $messageBodyDiv = $('<span class="messageBody right">').text(data.message);
 
-        const typingClass = data.typing ? "typing" : "";
+        const typingClass = data.typing ? 'typing' : '';
         const $messageDiv = $('<li class="message right"/>')
-            .data("username", data.username)
+            .data('username', data.username)
             .addClass(typingClass)
-            .append(
-                $usernameDiv,
-                $messageBodyDiv,
-                `<p class="time right">${date()}</p>`
-            );
+            .append($usernameDiv, $messageBodyDiv, `<p class="time right">${date()}</p>`);
 
         addMessageElement($messageDiv, options);
     };
@@ -135,22 +121,14 @@ $(function () {
 
         const $usernameDiv = $('<span class="username"/>')
             .text(data.username)
-            .css("color", getUsernameColor(data.username));
-        const $messageBodyDiv = $('<span class="messageBody left">').html(
-            data.message
-        );
+            .css('color', getUsernameColor(data.username));
+        const $messageBodyDiv = $('<span class="messageBody left">').html(data.message);
 
-        const typingClass = data.typing ? "typing" : "";
+        const typingClass = data.typing ? 'typing' : '';
         const $messageDiv = $('<li class="message left"/>')
-            .data("username", data.username)
+            .data('username', data.username)
             .addClass(typingClass)
-            .append(
-                $usernameDiv,
-                $messageBodyDiv,
-                `<p class="time left">${moment(data.time).format(
-                    "a hh:mm"
-                )}</p>`
-            );
+            .append($usernameDiv, $messageBodyDiv, `<p class="time left">${moment(data.time).format('a hh:mm')}</p>`);
 
         addMessageElement($messageDiv, options);
     };
@@ -184,10 +162,10 @@ $(function () {
         if (!options) {
             options = {};
         }
-        if (typeof options.fade === "undefined") {
+        if (typeof options.fade === 'undefined') {
             options.fade = true;
         }
-        if (typeof options.prepend === "undefined") {
+        if (typeof options.prepend === 'undefined') {
             options.prepend = false;
         }
 
@@ -213,7 +191,7 @@ $(function () {
 
     // Prevents input from having injected markup
     const cleanInput = (input) => {
-        return $("<div/>").text(input).html();
+        return $('<div/>').text(input).html();
     };
 
     // Updates the typing event
@@ -221,7 +199,7 @@ $(function () {
         if (connected) {
             if (!typing) {
                 typing = true;
-                socket.emit("typing");
+                socket.emit('typing');
             }
             lastTypingTime = new Date().getTime();
 
@@ -229,7 +207,7 @@ $(function () {
                 const typingTimer = new Date().getTime();
                 const timeDiff = typingTimer - lastTypingTime;
                 if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-                    socket.emit("stop typing");
+                    socket.emit('stop typing');
                     typing = false;
                 }
             }, TYPING_TIMER_LENGTH);
@@ -237,13 +215,13 @@ $(function () {
     };
 
     const date = () => {
-        return moment().format("a hh:mm");
+        return moment().format('a hh:mm');
     };
 
     // Gets the 'X is typing' messages of a user
     const getTypingMessages = (data) => {
-        return $(".typing.message").filter(function (i) {
-            return $(this).data("username") === data.username;
+        return $('.typing.message').filter(function (i) {
+            return $(this).data('username') === data.username;
         });
     };
 
@@ -270,7 +248,7 @@ $(function () {
         if (event.which === 13) {
             if (username) {
                 sendMessage();
-                socket.emit("stop typing");
+                socket.emit('stop typing');
                 typing = false;
             } else {
                 setUsername();
@@ -278,7 +256,7 @@ $(function () {
         }
     });
 
-    $inputMessage.on("input", () => {
+    $inputMessage.on('input', () => {
         updateTyping();
     });
 
@@ -297,10 +275,10 @@ $(function () {
     // Socket events
 
     // Whenever the server emits 'login', log the login message
-    socket.on("login", (data) => {
+    socket.on('login', (data) => {
         connected = true;
         // Display the welcome message
-        const message = "이슈 토론방에 오신걸 환영합니다.";
+        const message = '이슈 토론방에 오신걸 환영합니다.';
         log(message, {
             prepend: false,
         });
@@ -308,45 +286,54 @@ $(function () {
     });
 
     // Whenever the server emits 'new message', update the chat body
-    socket.on("new message", (data) => {
+    socket.on('new message', (data) => {
         addChatMessageLeft(data);
     });
 
     // Whenever the server emits 'user joined', log it in the chat body
-    socket.on("user joined", (data) => {
+    socket.on('user joined', (data) => {
         log(`${data.username}님 입장`);
         addParticipantsMessage(data);
     });
 
     // Whenever the server emits 'user left', log it in the chat body
-    socket.on("user left", (data) => {
+    socket.on('user left', (data) => {
         log(`${data.username}님이 떠났습니다.`);
         addParticipantsMessage(data);
         removeChatTyping(data);
     });
 
     // Whenever the server emits 'typing', show the typing message
-    socket.on("typing", (data) => {
+    socket.on('typing', (data) => {
         addChatTyping(data);
+    });
+    socket.on('keyword', (data) => {
+        let buckets = data.result.aggregations.myagg.buckets;
+        let resultArr = '';
+        for (let i in buckets) {
+            if (buckets[i].messageAggs.buckets[0].key == 'true') resultArr += buckets[i].key +':'+ buckets[i].doc_count+ '<br>';
+        }
+        console.log(resultArr);
+        $('.pop_keyword_div').html(resultArr);
     });
 
     // Whenever the server emits 'stop typing', kill the typing message
-    socket.on("stop typing", (data) => {
+    socket.on('stop typing', (data) => {
         removeChatTyping(data);
     });
 
-    socket.on("disconnect", () => {
-        log("연결이 끊겼습니다.");
+    socket.on('disconnect', () => {
+        log('연결이 끊겼습니다.');
     });
 
-    socket.on("reconnect", () => {
-        log("다시 연결되었습니다.");
+    socket.on('reconnect', () => {
+        log('다시 연결되었습니다.');
         if (username) {
-            socket.emit("add user", username);
+            socket.emit('add user', username);
         }
     });
 
-    socket.on("reconnect_error", () => {
-        log("재연결이 실패하였습니다.");
+    socket.on('reconnect_error', () => {
+        log('재연결이 실패하였습니다.');
     });
 });
