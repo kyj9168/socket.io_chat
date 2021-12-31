@@ -11,7 +11,8 @@ html {
 
 html,
 input {
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
+        sans-serif;
 }
 
 .messages::-webkit-scrollbar {
@@ -19,13 +20,13 @@ input {
 }
 
 .messages::-webkit-scrollbar-thumb {
-    background-color: #6D7D7B;
+    background-color: #6d7d7b;
     border-radius: 10px;
     background-clip: padding-box;
 }
 
 .messages::-webkit-scrollbar-track {
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 10px;
 }
 
@@ -41,7 +42,6 @@ ul {
     word-wrap: break-word;
 }
 
-
 /* Pages */
 
 .pages {
@@ -56,7 +56,6 @@ ul {
     position: absolute;
     width: 100%;
 }
-
 
 /* Login Page */
 
@@ -99,7 +98,6 @@ ul {
     font-weight: 100;
 }
 
-
 /* Chat page */
 
 .chat.page {
@@ -117,7 +115,6 @@ ul {
     text-align: center;
     clear: both;
 }
-
 
 /* Messages */
 
@@ -156,7 +153,7 @@ ul {
 .messageBody.left {
     border-radius: 0px 15px 15px 15px;
     background-color: #78a6a4;
-    color: #FFF;
+    color: #fff;
     border: 1px solid #6d7d7b;
 }
 
@@ -178,7 +175,7 @@ ul {
 }
 
 .message.typing .messageBody {
-    color: #FFF;
+    color: #fff;
 }
 
 .username {
@@ -186,7 +183,8 @@ ul {
     font-size: 18px;
     font-weight: 700;
     overflow: hidden;
-    text-shadow: -1px 0 rgb(117, 117, 117), 0 1px rgb(117, 117, 117), 1px 0 rgb(117, 117, 117), 0 -1px rgb(117, 117, 117);
+    text-shadow: -1px 0 rgb(117, 117, 117), 0 1px rgb(117, 117, 117), 1px 0 rgb(117, 117, 117),
+        0 -1px rgb(117, 117, 117);
     /* padding-right: 15px; */
 }
 
@@ -196,7 +194,6 @@ ul {
     padding-right: 15px;
     text-align: right;
 }
-
 
 /* Input */
 
@@ -219,13 +216,15 @@ ul {
     text-align: center;
     top: 25%;
     width: 100%;
-    color: #FFF;
+    color: #fff;
     font-size: 40px;
 }
 
-.time.right {}
+.time.right {
+}
 
-.time.left {}
+.time.left {
+}
 
 .time {
     display: contents;
@@ -239,7 +238,7 @@ ul {
     align-items: center;
 }
 
-.loader>div {
+.loader > div {
     background: rgb(255, 255, 255);
     width: 10px;
     height: 10px;
@@ -248,11 +247,11 @@ ul {
     animation: loader 0.3s infinite alternate;
 }
 
-.loader>div:nth-child(2) {
+.loader > div:nth-child(2) {
     animation-delay: 0.1s;
 }
 
-.loader>div:nth-child(3) {
+.loader > div:nth-child(3) {
     animation-delay: 0.2s;
 }
 
@@ -270,6 +269,7 @@ ul {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0.5;
+    opacity: 0.8;
     text-align: center;
+    background-color: #fff;
 }
