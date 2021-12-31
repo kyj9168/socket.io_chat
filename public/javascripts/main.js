@@ -248,6 +248,8 @@ $(function () {
         if (event.which === 13) {
             if (username) {
                 sendMessage();
+
+                socket.emit('set_keyword');
                 socket.emit('stop typing');
                 typing = false;
             } else {
@@ -288,6 +290,7 @@ $(function () {
     // Whenever the server emits 'new message', update the chat body
     socket.on('new message', (data) => {
         addChatMessageLeft(data);
+        socket.emit('set_keyword');
     });
 
     // Whenever the server emits 'user joined', log it in the chat body
@@ -312,12 +315,17 @@ $(function () {
         let resultArr = '';
         let num = 1;
         for (let i in buckets) {
-            if (buckets[i].messageAggs.buckets[0].key == 'true') {
-                resultArr += num + '.' + buckets[i].key + ':' + buckets[i].doc_count + '<br>';
+            var pattern = /([^가-힣a-z\x20])/i;
+            //var fld = "가나다라마사";
+
+            // if (buckets[i].messageAggs.buckets[0].key == 'true') {
+            if (!pattern.test(buckets[i].key) && buckets[i].key.length > 1) {
+                resultArr += buckets[i].key + ':' + buckets[i].doc_count + '<br>';
+                if (num == 10) {
+                    break;
+                }
                 num++;
             }
-
-            if (i == 10) break;
         }
         // console.log(resultArr);
         $('.pop_keyword_div').html(resultArr);
