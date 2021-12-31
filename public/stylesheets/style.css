@@ -279,4 +279,5 @@ ul {
     display: inline;
     padding: 5px;
     border-radius: 15px;
+    cursor: default;
 }
