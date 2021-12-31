@@ -99,7 +99,7 @@ io.on('connection', async (socket) => {
                 myagg: {
                     terms: {
                         field: 'message',
-                        size: 10,
+                        size: 30,
                     },
                     aggregations: {
                         messageAggs: {
