@@ -314,7 +314,7 @@ $(function () {
             if (buckets[i].messageAggs.buckets[0].key == 'true')
                 resultArr += Number(i) + 1 + '.' + buckets[i].key + ':' + buckets[i].doc_count + '<br>';
         }
-        console.log(resultArr);
+        // console.log(resultArr);
         $('.pop_keyword_div').html(resultArr);
     });
 
