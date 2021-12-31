@@ -326,7 +326,7 @@ $(function () {
 
             // if (buckets[i].messageAggs.buckets[0].key == 'true') {
             if (!pattern.test(buckets[i].key) && buckets[i].key.length > 1) {
-                resultArr += '<b>' + buckets[i].key + ':</b>' + buckets[i].doc_count + '개<br>';
+                resultArr += '<b>' + buckets[i].key + ' : </b>' + buckets[i].doc_count + '개<br>';
                 if (num == 10) {
                     break;
                 }
